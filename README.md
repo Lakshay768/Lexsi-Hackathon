@@ -9,7 +9,11 @@
 
 ## The question
 
-Models are safety-trained in **chat** and deployed as **agents** that act through tool calls. Does refusal learned in chat carry over when the *same request* arrives as an agent action, the next step of a plan to be emitted as a tool call? If not, why not, what training fixes it, and how can the gap be caught when training can't be trusted?
+Instruction-tuned models refuse harmful requests in **chat**. When the *same request* is wrapped in an **agentic scaffold** — a tool-call template, the next step of a plan to be emitted as a call — does that refusal **transfer**? If not, why not, what training fixes it, and how can the gap be caught when training can't be trusted?
+
+**Why we suspected it wouldn't transfer.** These models are trained by next-token prediction, which tends to learn *shortcuts* tied to surface form rather than a general rule. So a model may not represent the chat and the agent form of one request the same way, and safety learned in the chat form need not carry into the agent form. This is a question about whether refusal *generalises across formats*, not about a train-vs-deploy mismatch.
+
+**Prior work already documents the failure** (AgentHarm and others); our aim was to see the *mechanism* ourselves, and in particular to test whether it is a "bad view" problem — the model relating the chat and agent forms by surface shortcuts rather than meaning. That hypothesis is what led us first to try aligning the two forms with a cross-view loss (Step 3), and then, when alignment didn't drive refusal, to cross harm with format in the data (Step 5).
 
 We work mainly on **Tiny Aya Base**. It's a base model, so all of its safety behaviour comes from our training, and every effect can be traced to one data or loss choice. We replicate on **Tiny Aya Global**, Cohere's own post-trained model.
 
@@ -90,6 +94,8 @@ We work mainly on **Tiny Aya Base**. It's a base model, so all of its safety beh
 - **Models increasingly act, not just talk.** The same request can arrive as a chat message, a manager agent's instruction, text inside a tool output, or the next step of a plan to be executed as a tool call. Recent evaluations show refusal degrading sharply with tools: AgentHarm; *MLLMs Fail to Refuse when Using Tools Agentically*; *Tool Mediation Alters Refusal Mechanisms*. They mostly document the failure.
 
 We asked **where chat-trained refusal breaks in the agent channel, and which training changes repair it.** Everything that isn't the variable under test is held fixed: base model, LoRA recipe, data order, seed and evaluation.
+
+**Why study this when the failure is already known?** Prior evaluations document *that* refusal degrades with tools; we think the cause is more fundamental, and worth pinning down. Following Balestriero & LeCun, a model trained by next-token prediction learns whatever "views" its data pairs — and if harmful requests are only ever paired with chat format, the chat and agent forms of one request become a *bad view* pair: matched on surface form, not meaning. That is a flaw in how the representation is *trained*, not a missing fact. So we set out to (1) see the mechanism directly, (2) test whether a few extra loss terms that try to teach *good views* (a format-invariant representation) make refusal transfer — they mostly don't, because the format nuisance is large — and then ask the practical questions a deployer actually faces: (3) does a **safety-pretrained** model do any better? (4) is there a **post-training** fix (crossing harm with format in the data — yes)? and (5) can a **monitor** catch the gap in the meantime (partly — if it is kept outside the policy and reads content in a canonical form)?
 
 ---
 
