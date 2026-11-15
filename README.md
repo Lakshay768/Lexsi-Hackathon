@@ -79,8 +79,8 @@ We work mainly on **Tiny Aya Base**. It's a base model, so all of its safety beh
 | Other Lexsi kits | **AlignTune** (SFT and GRPO training) |
 | Supporting models | Qwen2.5-32B-Instruct-AWQ (teacher for reasons/descriptions; LLM judge); Qwen2.5-7B-Instruct (scorer audit); MiniLM sentence embeddings (CuratorKIT diversity/dedup, and the RL two-step reward). Aya Expanse 8B was used only in data curation to write multilingual reasons and the filler pool, which the English-only evaluation does not use |
 | Code | https://github.com/Lakshay768/Lexsi-Hackathon |
-| Models | https://huggingface.co/collections/lakshayb/lexsi-hackathon (LoRA adapters) |
-| Data, logs, traces | https://huggingface.co/collections/lakshayb/lexsi-hackathon (datasets, logs, traces) |
+| Models | https://huggingface.co/collections/lakshayb/lexsi-hackathon-refusal-is-keyed-to-context-6afa0835c0f1dc548bb1db7f (LoRA adapters) |
+| Data, logs, traces | https://huggingface.co/collections/lakshayb/lexsi-hackathon-refusal-is-keyed-to-context-6afa0835c0f1dc548bb1db7f (datasets, logs, traces) |
 
 ---
 
@@ -858,10 +858,10 @@ figs/
 - **Secrets** are read from Colab secrets (`HF_TOKEN`, `OPENAI_API_KEY`), never written into the code.
 - **Compute:** Colab A100 40GB / L4 for training and analysis; HF Jobs A100 80GB for evaluation.
 
-**Models (HF collection):** https://huggingface.co/collections/lakshayb/lexsi-hackathon . LoRA adapters only. [`RELEASE.md`](RELEASE.md) gives the release rule and the full list.
+**Models (HF collection):** https://huggingface.co/collections/lakshayb/lexsi-hackathon-refusal-is-keyed-to-context-6afa0835c0f1dc548bb1db7f . LoRA adapters only. [`RELEASE.md`](RELEASE.md) gives the release rule and the full list.
 - **Not released** (described here only): any model with degraded safety. That covers the benign-tools-only arms (`rfx_benign*`, which act on 63–92% of harmful agent requests), `rfa_*` (chat refusal 0.00), RL arms started from chat-only training (`rl_from_rf*`), `rfx_plain_factorial` and `rfx_refusal_plain` (act more than the chat-SFT start), and direction-ablated models.
 
-**Data (HF collection):** https://huggingface.co/collections/lakshayb/lexsi-hackathon .
+**Data (HF collection):** https://huggingface.co/collections/lakshayb/lexsi-hackathon-refusal-is-keyed-to-context-6afa0835c0f1dc548bb1db7f .
 - **Included:** evaluation tables, judged labels, training and reward logs, and teacher-written reasons and descriptions, keyed to source IDs, with a rebuild script.
 - **Not re-hosted:** WildGuardMix prompts (gated). AgentHarm is used for evaluation only, as its authors request.
 - **No raw model replies to harmful prompts**, and none are quoted in this write-up: aggregates only.
