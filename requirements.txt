@@ -1,0 +1,24 @@
+# Union of what the notebooks install (each notebook installs its own subset in its first cell).
+torch
+transformers>=5.15,<6
+peft
+accelerate
+datasets
+trl==1.7.1
+huggingface_hub>=0.34
+scikit-learn
+sentence-transformers
+safetensors
+pandas
+numpy
+matplotlib
+openai>=1.60          # judge client (vLLM OpenAI-compatible server) and the optional Astra notebook
+nest_asyncio
+langdetect
+vllm                  # evaluation and teacher generation (installed in a separate env in Colab)
+# Lexsi kits
+curatorkit[embedding] @ git+https://github.com/Lexsi-Labs/CuratorKIT.git
+aligntune @ git+https://github.com/Lexsi-Labs/aligntune.git      # installed with --no-deps in the notebooks
+safetune @ git+https://github.com/Lexsi-Labs/SafeTune.git
+circuitkit @ git+https://github.com/Lexsi-Labs/CircuitKIT.git
+auditkit
